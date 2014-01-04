@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Amuse Webtech</title>
+<!--
+<link href="" rel="stylesheet" type="text/css"/>
+<script src="" type="text/javascript"></script>
+-->
+</head>
+
+<body>
+
+<article>
+<section>
+<input id="message" type="text">
+<button id="send">送信</button>
+<div id="output"></div>
+</section>
+
+</article>
+
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+(function () {
+    var socket = io.connect('ws://centos.local:8080');
+    var output = document.getElementById('output');
+    var send = document.getElementById('send');
+    
+    function logStr(evtstr, msg) {
+        return '<div>' + evtstr + ' : ' + msg + '</div>';
+    };
+
+    socket.on('connect', function () {
+        send.addEventListener('click', function () {
+            var msg = document.getElementById('message').value;
+            socket.send(msg);
+            output.innerHTML += logStr('送信', msg);
+        });
+
+        socket.on('message', function (msg) {
+            output.innerHTML += logStr('受信', msg);
+        });
+    });
+}());
+</script>
+</body>
+</html>
